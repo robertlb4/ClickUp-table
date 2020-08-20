@@ -1,0 +1,16 @@
+<table style="width: 100%;">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns">{{column}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let brewery of breweries$ | async">
+      <td>{{brewery.name}}</td>
+      <td>{{brewery.brewery_type}}</td>
+      <td>{{brewery.state}}</td>
+      <td>{{brewery.website_url}}</td>
+    </tr>
+  </tbody>
+
+</table>
