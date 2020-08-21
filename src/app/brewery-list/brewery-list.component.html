@@ -7,9 +7,9 @@
   <tbody>
     <tr *ngFor="let brewery of breweries$ | async">
       <td>{{brewery.name}}</td>
-      <td>{{brewery.brewery_type}}</td>
+      <td>{{brewery.type}}</td>
       <td>{{brewery.state}}</td>
-      <td>{{brewery.website_url}}</td>
+      <td>{{brewery.website}}</td>
     </tr>
   </tbody>
 
