@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { BreweryService } from './brewery.service';
 import { Observable } from 'rxjs';
 
 
 @Component({
   selector: 'brewery-list',
   templateUrl: './brewery-list.component.html',
-  styleUrls: ['./brewery-list.component.scss']
+  styleUrls: ['./brewery-list.component.scss'],
+  providers: [BreweryService]
 })
 export class BreweryListComponent implements OnInit {
 
@@ -16,14 +17,12 @@ export class BreweryListComponent implements OnInit {
     "State",
     "Website",
   ];
-  breweries$ = this.http.get<any[]>('assets/data.json');
+  breweries$: Observable<any[]>;
 
-  constructor(
-    private http: HttpClient
-  ) { }
+  constructor(private breweryService: BreweryService) { }
 
   ngOnInit(): void { 
-    
+    this.breweries$ = this.breweryService.breweries$;
   }
 
 
