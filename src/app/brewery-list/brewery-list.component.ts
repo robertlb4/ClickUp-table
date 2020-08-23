@@ -27,9 +27,6 @@ export class BreweryListComponent implements OnInit {
   resizeMouseMove: () => void;
   resizeMouseUp: () => void;
 
-
-  sortRules = [];
-
   columns = [
     "name",
     "type",
@@ -37,12 +34,8 @@ export class BreweryListComponent implements OnInit {
     "website",
   ];
 
-  _sortedData: BehaviorSubject<Brewery[]> = new BehaviorSubject([]);
-
-  sorted$: Observable<Brewery[]> = this._sortedData.asObservable();
-
   breweries$ = this.store.select(getAllBrewery)
-    .subscribe(breweries => this._sortedData.next(breweries))
+
 
 
   constructor(
@@ -52,50 +45,7 @@ export class BreweryListComponent implements OnInit {
 
   ngOnInit(): void { 
     this.store.dispatch(breweryActions.loadBreweriesBegin())
-  }
 
-  dropListDropped(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-  }
-
-  addSortRule(column: string) {
-    let index;
-    const existingColumn = this.sortRules
-      .find((rule, i) => {
-        index = i;
-        return rule.column === column
-      });
-
-    if (existingColumn) {
-      if (existingColumn.direction > 0) {
-        existingColumn.direction = -1;
-      } else {
-        this.sortRules = this.sortRules
-          .slice(0, index).concat(this.sortRules.slice(index+1, this.sortRules.length));
-      }
-    } else {
-      this.sortRules.push({ column, direction: 1 });
-    }
-    this.sort(this._sortedData.value)
-  }
-
-  sort(brewereis: Brewery[]) {
-    const sorted = [...brewereis].sort((a, b) => {
-      let result = 0;
-      for (const rule of this.sortRules) {
-        if (result !== 0) break;
-
-        result = rule.direction*(
-          a[rule.column].toString() < b[rule.column].toString()
-            ? -1
-            : a[ rule.column ].toString() > b[ rule.column ].toString()
-              ? 1
-              : 0
-        );
-      }
-      return result;
-    });
-    this._sortedData.next(sorted);
   }
 
   resizeColumn(mouseEvent: MouseEvent) {
