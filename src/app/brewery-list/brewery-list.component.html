@@ -1,15 +1,28 @@
-<table style="width: 100%;">
-  <thead>
-    <tr>
-      <th *ngFor="let column of columns">{{column}}</th>
+<table style="width: 100%;" >
+  <thead cdkDropListGroup>
+    <tr cdkDropList cdkDropListOrientation="horizontal" cdkDropListLockAxis="x" (cdkDropListDropped)="dropListDropped($event)">
+      <th *ngFor="let column of columns; let first = first; let last = last" class="sort-header" cdkDrag>
+        <span
+        *ngIf="!first"
+        class="resize-handle resize-handle-left"
+        (mousedown)="resizeColumn($event)"></span>
+        <!-- <span>
+          <i class="material-icons drag-handle">drag_indicator</i>
+        </span> -->
+        <div (click)="addSortRule(column)">
+          {{column}}
+        </div>
+        
+        <span 
+        *ngIf="!last"
+        class="resize-handle resize-handle-right" 
+        (mousedown)="resizeColumn($event, i)"></span>
+      </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let brewery of breweries$ | async">
-      <td>{{brewery.name}}</td>
-      <td>{{brewery.type}}</td>
-      <td>{{brewery.state}}</td>
-      <td>{{brewery.website}}</td>
+    <tr *ngFor="let brewery of sorted$ | async">
+      <td *ngFor="let column of columns">{{brewery[column]}}</td>
     </tr>
   </tbody>
 
