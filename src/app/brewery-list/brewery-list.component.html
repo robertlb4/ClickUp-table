@@ -1,1 +1,10 @@
-<table clickUpTable style="width: 100%;" [columns]='columns' [data]="breweries$ | async"></table>
+<div class="search-container">
+  <div class="input-field">
+    <i class="material-icons">search</i>
+    <input (input)="table.filter($event.target.value)" type=text placeholder="Filter Breweries">
+  </div>
+
+</div>
+
+
+<table #table clickUpTable style="width: 100%;" [columns]='columns' [data]="breweries$ | async"></table>

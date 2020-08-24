@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnDestroy, Renderer2 } from '@angular/core';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { map } from 'rxjs/operators';
 
 export interface ColumnInfo {
   headerText: string;
@@ -24,16 +25,22 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
     this._dataSubject.next(value);
   }
 
-  sortRules: SortRule[] = []
   destroy$ = new Subject();
-  _sortRules = new BehaviorSubject<SortRule[]>([]);
+  sortRules: SortRule[] = [];
+
+  _filterTerms = new BehaviorSubject<string>('');
+  filterTerms$ = this._filterTerms.asObservable()
+
   _dataSubject = new BehaviorSubject<any[]>([]);
-  _sortedData$: Observable<any[]>;
+  _filteredData$: Observable<any[]>;
 
   constructor() { }
 
   ngOnInit(): void {
-    this._sortedData$ = this._dataSubject.asObservable()
+    this._filteredData$ = combineLatest(this._dataSubject.asObservable(), this.filterTerms$)
+      .pipe(
+        map(([data, searchTerm]) => data.filter(obj => this.filterPredicate(obj, searchTerm))),
+      )
   }
 
   ngOnDestroy() {
@@ -65,6 +72,17 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
       rules.push({ column, direction: 1 });
     }
     this.sortRules = rules;
+  }
+
+  filter(text: string) {
+    this._filterTerms.next(text);
+  }
+  
+  filterPredicate(data: any[], searchTerm: string) {
+    const dataStr = Object.entries(data)
+      .reduce((acc, value) => acc + value + '◬', '')
+      .toLowerCase();
+    return dataStr.indexOf(searchTerm.trim().toLowerCase()) !== -1
   }
 
 }

@@ -1,0 +1,27 @@
+.search-container {
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+
+  .input-field {
+    position: relative;
+    
+    i {
+      position: absolute;
+      left: .5rem;
+      top: 50%;
+      margin-top: -.5rem;
+      font-size: 1rem;
+      color: rgba(0, 0, 0, 0.6)
+    }
+  }
+
+  input {
+    font-size: 1rem;
+    padding: 0.75rem 0.75rem;
+    padding-left: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.38);
+    border-radius: 4px;
+  }
+}

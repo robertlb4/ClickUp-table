@@ -1,7 +1,12 @@
-<table *ngIf="_sortedData$ | async as data">
+<table *ngIf="_filteredData$ | async as data">
   <thead>
-    <tr cdkDropList cdkDropListOrientation="horizontal" cdkDropListLockAxis="x" (cdkDropListDropped)="dropListDropped($event)">
-      <th clickUpResize [leftHandle]="!first" [rightHandle]="!last" *ngFor="let column of columns; let first = first; let last = last">
+    <tr class="header-row" cdkDropList cdkDropListOrientation="horizontal" cdkDropListLockAxis="x" (cdkDropListDropped)="dropListDropped($event)">
+      <th 
+      clickUpResize
+      [leftHandle]="!first"
+      [rightHandle]="!last"
+      cdkDrag
+      *ngFor="let column of columns; let first = first; let last = last">
         <clickUpSort [column]="column" (sort)="addSortRule($event)">
           {{column.headerText}}
         </clickUpSort>
