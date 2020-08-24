@@ -9,8 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class BreweryService {
 
-  // HREF = 'https://api.openbrewerydb.org/breweries'
-  HREF = 'assets/data.json'
+  HREF = 'https://api.openbrewerydb.org/breweries'
 
   constructor(private http: HttpClient) { }
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SortRule } from './click-up-table/click-up-table.component';
+import { SortRule } from '../click-up-table/click-up-table.component';
 
 @Pipe({
   name: 'orderBy'
