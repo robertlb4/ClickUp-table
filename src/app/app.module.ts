@@ -10,12 +10,16 @@ import { reducers, metaReducers } from './reducers';
 import { effects } from './effects';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ClickUpTableComponent } from './click-up-table/click-up-table.component';
+import { ClickUpSortComponent } from './click-up-sort/click-up-sort.component';
+import { OrderByPipe } from './order-by.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     BreweryListComponent,
     ClickUpTableComponent,
+    ClickUpSortComponent,
+    OrderByPipe,
   ],
   imports: [
     BrowserModule,

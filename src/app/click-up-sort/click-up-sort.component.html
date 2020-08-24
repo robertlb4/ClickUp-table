@@ -1,0 +1,17 @@
+<button 
+class="header-sort-button" 
+*ngIf="column?.sortable; else original" 
+(click)=handleClick(column.dataKey)>
+  <ng-container *ngTemplateOutlet="originalContent" ></ng-container>
+  <i *ngIf="direction === 1" class="material-icons">arrow_drop_down</i>
+  <i *ngIf="direction === -1" class="material-icons"> arrow_drop_up</i>
+  <div *ngIf="direction === undefined" class="icon-placeholder"></div>
+</button>
+
+<ng-template #original>
+  <ng-container *ngTemplateOutlet="originalContent" ></ng-container>
+</ng-template>
+
+<ng-template #originalContent>
+  <ng-content></ng-content>
+</ng-template>

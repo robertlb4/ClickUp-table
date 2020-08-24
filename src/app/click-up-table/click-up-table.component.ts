@@ -1,8 +1,12 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { Component, OnInit, Input, OnDestroy, Renderer2 } from '@angular/core';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
+export interface ColumnInfo {
+  headerText: string;
+  dataKey: string;
+  sortable: boolean
+}
 
 export interface SortRule {
   column: string;
@@ -15,28 +19,33 @@ export interface SortRule {
   styleUrls: ['./click-up-table.component.scss']
 })
 export class ClickUpTableComponent implements OnInit, OnDestroy {
-  @Input() columns: string[];
-  @Input() set data(value: Observable<any[][]>|any[]) {
-    if (Array.isArray(value)) {
-      this._dataSubject.next(value);
-    } else {
-      value.pipe(takeUntil(this.destroy$)).subscribe(val => this._dataSubject.next(val));
-    }
+  @Input() columns: ColumnInfo[];
+  @Input() set data(value: any[]) {
+    this._dataSubject.next(value);
   }
 
+  //resize props
+  resizeEle: HTMLInputElement
+  neighborEle: HTMLInputElement
+  pressed;
+  startX;
+  startWidth;
+  neighborWdith;
+  resizeMouseMove: () => void;
+  resizeMouseUp: () => void;
+
+  sortRules: SortRule[] = []
   destroy$ = new Subject();
   _sortRules = new BehaviorSubject<SortRule[]>([]);
   _dataSubject = new BehaviorSubject<any[]>([]);
   _sortedData$: Observable<any[]>;
 
-  constructor() { }
+  constructor(
+    private renderer: Renderer2,
+  ) { }
 
   ngOnInit(): void {
-    this._sortedData$ = combineLatest(
-      this._sortRules.asObservable(),
-      this._dataSubject.asObservable(),
-    )
-      .pipe(map(([rules, data]) => this.sort(rules, data)));
+    this._sortedData$ = this._dataSubject.asObservable()
   }
 
   ngOnDestroy() {
@@ -50,8 +59,8 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
 
   addSortRule(column: string) {
     let index;
-    let rules = this._sortRules.value;
-    const existingColumn = rules
+    let rules = [...this.sortRules];
+    const existingColumn = this.sortRules
       .find((rule, i) => {
         index = i;
         return rule.column === column
@@ -67,26 +76,52 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
     } else {
       rules.push({ column, direction: 1 });
     }
-    return this._sortRules.next(rules);
+    this.sortRules = rules;
   }
 
-  sort(sortRules: SortRule[], data: any[]) {
-    const sorted = [...data].sort((a, b) => {
-      let result = 0;
-      for (const rule of sortRules) {
-        if (result !== 0) break;
+  resizeColumn(mouseEvent: MouseEvent) {
+    mouseEvent.stopPropagation();
+    const target = <HTMLInputElement>mouseEvent.target
+    const isRightSide = target.classList.contains('resize-handle-right');
 
-        result = rule.direction*(
-          a[rule.column].toString() < b[rule.column].toString()
-            ? -1
-            : a[ rule.column ].toString() > b[ rule.column ].toString()
-              ? 1
-              : 0
-        );
+    this.resizeEle = target;
+    this.neighborEle = isRightSide
+      ? <HTMLInputElement>target.parentElement.nextElementSibling
+      : <HTMLInputElement>target.parentElement.previousElementSibling;
+
+    this.pressed = true;
+    this.startX = mouseEvent.pageX;
+    this.startWidth = target.parentElement.clientWidth;
+    this.neighborWdith = this.neighborEle.clientWidth;
+    console.log(this.neighborEle, this.neighborWdith)
+    this.initResize(isRightSide);
+  }
+
+  private initResize(isRightSide: boolean) {
+    this.resizeMouseMove = this.renderer.listen('window', 'mousemove', (event) => {
+      const delta = Math.abs(event.pageX - this.startX)
+
+      let newWidth: number;
+      let newNeighborWidth: number;
+      if ((event.pageX > this.startX && isRightSide)
+        || (event.pageX < this.startX && !isRightSide)
+      ) {
+        newWidth = this.startWidth + delta;
+        newNeighborWidth = this.neighborWdith - delta;
+      } else {
+        newWidth = this.startWidth - delta
+        newNeighborWidth = this.neighborWdith + delta;
       }
-      return result;
+
+      this.resizeEle.parentElement.setAttribute('width', `${newWidth}px`);
+      this.neighborEle.setAttribute('width', `${newNeighborWidth}px`);
     });
-    return sorted
+    this.resizeMouseUp = this.renderer.listen('window', 'mouseup', event => {
+      event.stopPropagation();
+      this.resizeMouseMove();
+      this.resizeMouseUp();
+    })
   }
+
 
 }
