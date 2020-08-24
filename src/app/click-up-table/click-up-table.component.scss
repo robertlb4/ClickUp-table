@@ -1,3 +1,7 @@
+:host {
+  padding: 10px;
+}
+
 table {
   table-layout: fixed;
   border-collapse: collapse;
@@ -13,6 +17,9 @@ table {
       text-align: left;
       vertical-align: middle;
       padding: .5rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: max-content;
     }
   }
 
@@ -24,30 +31,6 @@ table {
         position: relative;
         min-height: 2rem;
         font-weight: bold;
-        span {
-
-          &.resize-handle {
-            display: block;
-            position: absolute;
-            top: 10%;
-            padding: 0;
-            height: 80%;
-            width: 5px;
-            cursor: col-resize;
-            z-index: 10;
-          }
-
-          &.resize-handle-right {
-            right: 0;
-            border-right: 1px solid #fafafa;
-          }
-
-          &.resize-handle-left {
-            left: 0;
-            border-left: 1px solid #fafafa;
-          }
-
-        }
       }
     }
   }

@@ -1,0 +1,12 @@
+
+  <span
+  *ngIf="leftHandle"
+  class="resize-handle resize-handle-left"
+  (mousedown)="resizeColumn($event)"></span>
+
+  <ng-content></ng-content>
+
+  <span 
+  *ngIf="rightHandle"
+  class="resize-handle resize-handle-right" 
+  (mousedown)="resizeColumn($event, i)"></span>

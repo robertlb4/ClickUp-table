@@ -12,6 +12,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { ClickUpTableComponent } from './click-up-table/click-up-table.component';
 import { ClickUpSortComponent } from './click-up-sort/click-up-sort.component';
 import { OrderByPipe } from './order-by.pipe';
+import { ClickUpResizeComponent } from './click-up-resize/click-up-resize.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { OrderByPipe } from './order-by.pipe';
     ClickUpTableComponent,
     ClickUpSortComponent,
     OrderByPipe,
+    ClickUpResizeComponent,
   ],
   imports: [
     BrowserModule,

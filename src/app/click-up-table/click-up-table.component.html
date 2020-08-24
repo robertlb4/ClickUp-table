@@ -1,20 +1,10 @@
-<table style="width: 100%;" *ngIf="_sortedData$ | async as data">
+<table *ngIf="_sortedData$ | async as data">
   <thead>
     <tr cdkDropList cdkDropListOrientation="horizontal" cdkDropListLockAxis="x" (cdkDropListDropped)="dropListDropped($event)">
-      <th *ngFor="let column of columns; let first = first; let last = last" cdkDrag>
-        <span
-        *ngIf="!first"
-        class="resize-handle resize-handle-left"
-        (mousedown)="resizeColumn($event)"></span>
-
+      <th clickUpResize [leftHandle]="!first" [rightHandle]="!last" *ngFor="let column of columns; let first = first; let last = last">
         <clickUpSort [column]="column" (sort)="addSortRule($event)">
           {{column.headerText}}
         </clickUpSort>
-        
-        <span 
-        *ngIf="!last"
-        class="resize-handle resize-handle-right" 
-        (mousedown)="resizeColumn($event, i)"></span>
       </th>
     </tr>
   </thead>

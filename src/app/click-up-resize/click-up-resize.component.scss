@@ -1,0 +1,28 @@
+:host {
+  position: relative;
+}
+
+span {
+
+  &.resize-handle {
+    display: block;
+    position: absolute;
+    top: 10%;
+    padding: 0;
+    height: 80%;
+    width: 5px;
+    cursor: col-resize;
+    z-index: 10;
+  }
+
+  &.resize-handle-right {
+    right: 0;
+    border-right: 1px solid #fafafa;
+  }
+
+  &.resize-handle-left {
+    left: 0;
+    border-left: 1px solid #fafafa;
+  }
+
+}
