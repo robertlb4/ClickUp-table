@@ -16,7 +16,7 @@ export const initialState: BreweriesState = {
 
 const breweriesReducer = createReducer(
   initialState,
-  on(BreweriesActions.loadBreweriesBegin, state => ({ ...state, loading: true, error: null })),
+  on(BreweriesActions.loadBreweriesBegin, state => ({ ...state, loading: true })),
   on(BreweriesActions.loadBreweriesSucess, (state, action) => ({
     ...state,
     loading: false,
@@ -34,5 +34,6 @@ export function reducer(state: BreweriesState, action: Action) {
 }
 
 export const getBreweries = (state: BreweriesState) => state.breweries;
+
 
 

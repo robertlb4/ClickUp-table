@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let row of data | orderBy:sortRules">
+    <tr *ngFor="let row of data | orderBy:(sortRules | async)">
       <td *ngFor="let column of columns">{{row[column.dataKey]}}</td>
     </tr>
   </tbody>

@@ -2,6 +2,9 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subject, combineLatest } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { getSortRules } from '../reducers';
+import { loadSortRulesBegin } from '../actions/sort.actions'
 
 export interface ColumnInfo {
   headerText: string;
@@ -26,7 +29,7 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
   }
 
   destroy$ = new Subject();
-  sortRules: SortRule[] = [];
+  sortRules: Observable<SortRule[]> = this.store.select(getSortRules);
 
   _filterTerms = new BehaviorSubject<string>('');
   filterTerms$ = this._filterTerms.asObservable()
@@ -34,9 +37,12 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
   _dataSubject = new BehaviorSubject<any[]>([]);
   _filteredData$: Observable<any[]>;
 
-  constructor() { }
+  constructor(
+    private store: Store
+  ) { }
 
   ngOnInit(): void {
+    this.store.dispatch(loadSortRulesBegin())
     this._filteredData$ = combineLatest(this._dataSubject.asObservable(), this.filterTerms$)
       .pipe(
         map(([data, searchTerm]) => data.filter(obj => this.filterPredicate(obj, searchTerm))),
@@ -50,28 +56,6 @@ export class ClickUpTableComponent implements OnInit, OnDestroy {
 
   dropListDropped(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
-  }
-
-  addSortRule(column: string) {
-    let index;
-    let rules = [...this.sortRules];
-    const existingColumn = this.sortRules
-      .find((rule, i) => {
-        index = i;
-        return rule.column === column
-      });
-
-    if (existingColumn) {
-      if (existingColumn.direction > 0) {
-        existingColumn.direction = -1;
-      } else {
-        rules = rules
-          .slice(0, index).concat(rules.slice(index+1, rules.length));
-      }
-    } else {
-      rules.push({ column, direction: 1 });
-    }
-    this.sortRules = rules;
   }
 
   filter(text: string) {

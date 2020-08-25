@@ -65,10 +65,7 @@ export class ClickUpResizeComponent {
       } else {
         newWidth = this.startWidth - delta
         newNeighborWidth = this.neighborWdith + delta;
-      }
-
-      console.log(this.neighborEle.clientWidth, newNeighborWidth);
-      
+      }      
       
       this.host.nativeElement.style.width = `${newWidth}px`;
       this.neighborEle.style.width = `${newNeighborWidth}px`;

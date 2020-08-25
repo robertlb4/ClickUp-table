@@ -1,5 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ColumnInfo } from '../click-up-table/click-up-table.component';
+import { ColumnInfo, SortRule } from '../click-up-table/click-up-table.component';
+import { Store } from '@ngrx/store';
+import { getSortRulesByColumn } from '../reducers'
+import { sortChangedBegin } from '../actions/sort.actions'
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'clickUpSort, [clickUpSort]',
@@ -8,18 +12,21 @@ import { ColumnInfo } from '../click-up-table/click-up-table.component';
 })
 export class ClickUpSortComponent implements OnInit {
   @Input() column: ColumnInfo;
-  @Output() sort = new EventEmitter()
+  @Output() sort = new EventEmitter();
 
-  direction;
+  rule$: Observable<SortRule>;
 
-  constructor() { }
+  constructor(
+    private store: Store,
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.rule$ = this.store.select(getSortRulesByColumn(this.column.dataKey));
+  }
 
   handleClick(column: string) {
-    this.direction = this.direction === -1 ? undefined : this.direction === 1 ? -1 : 1;
-
-    this.sort.emit(column)
+    this.store.dispatch(sortChangedBegin({ column }));
+    this.sort.emit(column);
   }
 
 }
