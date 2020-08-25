@@ -10,16 +10,17 @@ export enum ActionTypes {
 
 export const loadSortRulesBegin = createAction(
   ActionTypes.LoadSortRulesBegin,
+  props<{tableName: string}>(),
 );
 
 export const loadSortRulesSuccess = createAction(
   ActionTypes.LoadSortRulesSuccess,
-  props<{rules: SortRule[]}>(),
+  props<{tableName, rules: SortRule[]}>(),
 )
 
 export const sortChangedBegin = createAction(
   ActionTypes.UpdateSortRulesBegin,
-  props<{column: string}>(),
+  props<{tableName: string, column: string}>(),
 );
 
 export const sortChangedSuccess = createAction(

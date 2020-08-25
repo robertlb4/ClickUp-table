@@ -7,14 +7,14 @@
       [rightHandle]="!last"
       cdkDrag
       *ngFor="let column of columns; let first = first; let last = last">
-        <clickUpSort [column]="column" (sort)="addSortRule($event)">
+        <clickUpSort [column]="column" [tableName]="tableName">
           {{column.headerText}}
         </clickUpSort>
       </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let row of data | orderBy:(sortRules | async)">
+    <tr *ngFor="let row of data | orderBy:(sortRules$ | async)">
       <td *ngFor="let column of columns">{{row[column.dataKey]}}</td>
     </tr>
   </tbody>

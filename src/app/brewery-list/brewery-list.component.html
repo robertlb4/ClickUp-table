@@ -6,4 +6,4 @@
 
 </div>
 
-<table #table clickUpTable style="width: 100%;" [columns]='columns' [data]="breweries$ | async"></table>
+<table #table clickUpTable [tableName]="'breweryTable'" [columns]='columns' [data]="breweries$ | async"></table>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 
 @Component({
   selector: '[clickUpResize]',
@@ -34,6 +34,7 @@ export class ClickUpResizeComponent {
     mouseEvent.preventDefault();
 
     const target = <HTMLInputElement>mouseEvent.target
+    //tracks whether resize should affect the left or right sibling
     const isRightSide = target.classList.contains('resize-handle-right');
 
     this.neighborEle = isRightSide

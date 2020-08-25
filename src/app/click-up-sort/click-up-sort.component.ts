@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ColumnInfo, SortRule } from '../click-up-table/click-up-table.component';
 import { Store } from '@ngrx/store';
 import { getSortRulesByColumn } from '../reducers'
-import { sortChangedBegin } from '../actions/sort.actions'
+import { sortChangedBegin } from '../actions/table.actions'
 import { Observable } from 'rxjs';
 
 @Component({
@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./click-up-sort.component.scss']
 })
 export class ClickUpSortComponent implements OnInit {
+  @Input() tableName = 'table';
   @Input() column: ColumnInfo;
   @Output() sort = new EventEmitter();
 
@@ -21,11 +22,11 @@ export class ClickUpSortComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.rule$ = this.store.select(getSortRulesByColumn(this.column.dataKey));
+    this.rule$ = this.store.select(getSortRulesByColumn(this.tableName, this.column.dataKey));
   }
 
   handleClick(column: string) {
-    this.store.dispatch(sortChangedBegin({ column }));
+    this.store.dispatch(sortChangedBegin({ tableName: this.tableName, column }));
     this.sort.emit(column);
   }
 
