@@ -3,6 +3,12 @@ sudo: false
 language: node_js
 node_js:
   - 12.14.1
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 cache:
   directories:
     - $HOME/.npm
@@ -14,4 +20,4 @@ install:
   - npm i -g npm@6.9.0
   - npm ci
 script:
-  - npm run build
+  - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
